@@ -1,7 +1,7 @@
-public class ParentScope {
+public class ScopeID {
     private String id;
 
-    public ParentScope(String id) {
+    public ScopeID(String id) {
         this.id = id;
     }
 

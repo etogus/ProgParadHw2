@@ -1,12 +1,12 @@
 public class Vars {
     private String name;
     private String type;
-    private int index;
+    private int lineIndex;
 
     public Vars(String name, String type, int index) {
         this.name = name;
         this.type = type;
-        this.index = index;
+        this.lineIndex = index;
     }
 
     @Override
@@ -14,7 +14,7 @@ public class Vars {
         return "Vars{" +
                 "name='" + name + '\'' +
                 ", type='" + type + '\'' +
-                ", index=" + index +
+                ", lineIndex=" + lineIndex +
                 '}';
     }
 }

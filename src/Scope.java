@@ -1,22 +1,22 @@
 import java.util.ArrayList;
 
 public class Scope {
-    private String id;
-    private ParentScope parentScope;
+    private ScopeID id;
+    private ScopeID parent;
     private ArrayList<Vars> vars;
 
-    public Scope(String id, ParentScope parentScope, ArrayList<Vars> vars) {
+    public Scope(ScopeID id, ScopeID parent, ArrayList<Vars> vars) {
         this.id = id;
-        this.parentScope = parentScope;
+        this.parent = parent;
         this.vars = vars;
     }
 
-    public String getId() {
+    public ScopeID getId() {
         return id;
     }
 
-    public ParentScope getParentScope() {
-        return parentScope;
+    public ScopeID getParent() {
+        return parent;
     }
 
     public ArrayList<Vars> getVars() {
@@ -27,7 +27,7 @@ public class Scope {
     public String toString() {
         return "Scope{" +
                 "id='" + id + '\'' +
-                ", parentScope=" + parentScope +
+                ", parent=" + parent +
                 ", vars=" + vars +
                 '}';
     }
