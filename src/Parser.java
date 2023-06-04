@@ -49,16 +49,10 @@ public class Parser {
         String rx = "^(\\w+)\\s+(\\w+)\\((.*?)\\)\\s*\\{";
         Pattern p = Pattern.compile(rx);
         Matcher matcher = p.matcher(line);
-        //System.out.println("=== READFUN ===");
-        //System.out.println("line = " + line);
-        //System.out.println("matcher.find() = " + matcher.find());
         if (matcher.find()){
             funType = matcher.group(1);
-            //System.out.println("funType = " + funType);
             funName = matcher.group(2);
-            //System.out.println("funName = " + funType);
             funParam = matcher.group(3);
-            //System.out.println("funParam = " + funType);
             symbolTable.getScopes().get(globalScopeID).getVars().add(new Vars(funName, funType, lineIndex + 1));
             enterScope(line);
             if(funParam != null) {
@@ -74,45 +68,40 @@ public class Parser {
         String varName;
         String extraVar;
         String temp;
-        String rx = "\\b(int|float|char|bool)\\s+([a-zA-Z_][a-zA-Z0-9_]*)(?:\\s*,\\s*([a-zA-Z_][a-zA-Z0-9_]*)(?:\\s*,\\s*[a-zA-Z_][a-zA-Z0-9_]*)*)?\\s*;";
+        String rx = "\\b(int|float|char|bool)\\s+([a-zA-Z_][a-zA-Z0-9_]*)(?:\\s*,\\s*([a-zA-Z_][a-zA-Z0-9_]*)(?:\\s*,\\s*[a-zA-Z_][a-zA-Z0-9_]*)*)?\\s*;*";
         Pattern p = Pattern.compile(rx);
         Matcher matcher = p.matcher(line);
-        //System.out.println("=== READVAR ===");
-        //System.out.println("line = " + line);
-        //System.out.println("matcher.find() = " + matcher.find());
         if (matcher.find()){
             varType = matcher.group(1);
-            //System.out.println("varType = " + varType);
             varName = matcher.group(2);
-            //System.out.println("varName = " + varName);
             extraVar = matcher.group(3);
-            //System.out.println("extraVar = " + extraVar);
             temp = varType;
-            currentScope.getVars().add(new Vars(varType, varName, lineIndex + 1));
+            currentScope.getVars().add(new Vars(varName, varType, lineIndex + 1));
+            if(extraVar != null) {
+                if(extraVar.equals("int") || extraVar.equals("float") || extraVar.equals("char") || extraVar.equals("String") || extraVar.equals("double")) {
+                    temp = extraVar;
+                    extraVar = line.substring(line.indexOf(",") + 2);
+                    extraVar = extraVar.substring(extraVar.indexOf(temp) + temp.length() + 1);
+                }
+            }
 
             while(extraVar != null) {
-                //rx = "^\\s*,?\\s*(int|float|char|bool)?\\s+([a-zA-Z_][a-zA-Z0-9_]*)\\s*((,\\s*(int|float|char|bool)?\\s*[a-zA-Z_][a-zA-Z0-9_]*\\s*)*)?;?\\s*$";
-                //p = Pattern.compile(rx);
-                //matcher = p.matcher(extraVar);
-                //System.out.println(matcher.find());
-                //if(!(matcher.find())) break;
-                //System.out.println("=== READVAR EXTRA ===");
                 if(extraVar.contains(",")) {
-                    varName = extraVar.substring(0, extraVar.indexOf(","));
-                    extraVar = extraVar.substring(extraVar.indexOf(","));
+                    if(extraVar.contains("int") || extraVar.contains("float") || extraVar.contains("char") || extraVar.contains("bool")) {
+                        varType = extraVar.substring(0, extraVar.indexOf(" "));
+                        varName = extraVar.substring(extraVar.indexOf(" ") + 1, extraVar.indexOf(","));
+                        extraVar = extraVar.substring(extraVar.indexOf(",") + 1);
+                    } else {
+                        varName = extraVar.substring(0, extraVar.indexOf(","));
+                        extraVar = extraVar.substring(extraVar.indexOf(","));
+                        varType = temp;
+                    }
                 } else {
                     varName = extraVar;
                     extraVar = null;
+                    varType = temp;
                 }
-                //varName = extraVar.substring(0, extraVar.indexOf(",")); //matcher.group(2);
-                //System.out.println("varName = " + varName);
-                varType = temp;
-                //if(!(matcher.group(1).isEmpty())) {
-                //    varType = matcher.group(1);
-                //}
-                //System.out.println("varType = " + varType);
-                currentScope.getVars().add(new Vars(varType, varName, lineIndex + 1));
-                //extraVar = extraVar.substring(extraVar.indexOf(","));//matcher.group(3);
+                currentScope.getVars().add(new Vars(varName, varType, lineIndex + 1));
             }
             return true;
         }
