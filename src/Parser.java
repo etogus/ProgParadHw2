@@ -80,7 +80,7 @@ public class Parser {
             if(extraVar != null) {
                 if(extraVar.equals("int") || extraVar.equals("float") || extraVar.equals("char") || extraVar.equals("String") || extraVar.equals("double")) {
                     temp = extraVar;
-                    extraVar = line.substring(line.indexOf(",") + 2);
+                    extraVar = line.substring(line.indexOf(","));
                     extraVar = extraVar.substring(extraVar.indexOf(temp) + temp.length() + 1);
                 }
             }
@@ -89,8 +89,8 @@ public class Parser {
                 if(extraVar.contains(",")) {
                     if(extraVar.contains("int") || extraVar.contains("float") || extraVar.contains("char") || extraVar.contains("bool")) {
                         varType = extraVar.substring(0, extraVar.indexOf(" "));
-                        varName = extraVar.substring(extraVar.indexOf(" ") + 1, extraVar.indexOf(","));
-                        extraVar = extraVar.substring(extraVar.indexOf(",") + 1);
+                        varName = extraVar.substring(extraVar.indexOf(" "), extraVar.indexOf(","));
+                        extraVar = extraVar.substring(extraVar.indexOf(","));
                     } else {
                         varName = extraVar.substring(0, extraVar.indexOf(","));
                         extraVar = extraVar.substring(extraVar.indexOf(","));
