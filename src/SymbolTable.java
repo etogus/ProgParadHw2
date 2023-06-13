@@ -1,13 +1,13 @@
 import java.util.HashMap;
 
 public class SymbolTable {
-    private HashMap<ScopeID, Scope> scopes;
+    private HashMap<String, Scope> scopes;
 
-    public SymbolTable(HashMap<ScopeID, Scope> scopes) {
+    public SymbolTable(HashMap<String, Scope> scopes) {
         this.scopes = scopes;
     }
 
-    public HashMap<ScopeID, Scope> getScopes() {
+    public HashMap<String, Scope> getScopes() {
         return scopes;
     }
 

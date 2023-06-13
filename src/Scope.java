@@ -1,21 +1,21 @@
 import java.util.ArrayList;
 
 public class Scope {
-    private ScopeID id;
-    private ScopeID parent;
+    private String id;
+    private String parent;
     private ArrayList<Vars> vars;
 
-    public Scope(ScopeID id, ScopeID parent, ArrayList<Vars> vars) {
+    public Scope(String id, String parent, ArrayList<Vars> vars) {
         this.id = id;
         this.parent = parent;
         this.vars = vars;
     }
 
-    public ScopeID getId() {
+    public String getId() {
         return id;
     }
 
-    public ScopeID getParent() {
+    public String getParent() {
         return parent;
     }
 
@@ -26,9 +26,8 @@ public class Scope {
     @Override
     public String toString() {
         return "Scope{" +
-                "id='" + id + '\'' +
-                ", parent=" + parent +
-                ", vars=" + vars +
+                "id=" + id + ", " +
+                "vars=" + vars +
                 '}';
     }
 }

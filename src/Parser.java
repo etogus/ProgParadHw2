@@ -7,8 +7,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Parser {
-    private SymbolTable symbolTable;
-    private ScopeID globalScopeID;
+    private static SymbolTable symbolTable;
+    private String globalScopeID;
     private Scope currentScope;
 
     public void runParser() throws IOException {
@@ -20,7 +20,7 @@ public class Parser {
         }
         bufferedReader.close();
 
-        globalScopeID = new ScopeID("global");
+        globalScopeID = "global ";
         currentScope = new Scope(globalScopeID, null, new ArrayList<>());
         symbolTable = new SymbolTable(new HashMap<>());
         symbolTable.getScopes().put(globalScopeID, currentScope);
@@ -39,6 +39,7 @@ public class Parser {
             }
             exitScope(line);
         }
+        //System.out.println(symbolTable);
         System.out.println(currentScope);
     }
 
@@ -53,7 +54,9 @@ public class Parser {
             funType = matcher.group(1);
             funName = matcher.group(2);
             funParam = matcher.group(3);
-            symbolTable.getScopes().get(globalScopeID).getVars().add(new Vars(funName, funType, lineIndex + 1));
+            //System.out.println(symbolTable);
+            //System.out.println(currentScope.getId());
+            symbolTable.getScopes().get(currentScope.getId()).getVars().add(new Vars(funName, funType, lineIndex + 1));
             enterScope(line);
             if(funParam != null) {
                 readVar(funParam, lineIndex);
@@ -110,18 +113,18 @@ public class Parser {
 
     public boolean enterScope(String line) {
         String scopeName;
-        ScopeID newScopeID;
+        //ScopeID newScopeID;
         String rx = "^\\s*(.*?)\\{\\s*$";
         Pattern p = Pattern.compile(rx);
         Matcher matcher = p.matcher(line);
         if (matcher.find()) {
             scopeName = matcher.group(1);
             if(scopeName.equals("")) {
-                scopeName = "Some Block Scope";
+                scopeName = "BlockScope ";
             }
-            newScopeID = new ScopeID(scopeName);
-            Scope newScope = new Scope(newScopeID, currentScope.getId(), new ArrayList<>());
-            symbolTable.getScopes().put(newScopeID, newScope);
+            //newScopeID = new ScopeID(scopeName);
+            Scope newScope = new Scope(scopeName, currentScope.getId(), new ArrayList<>());
+            symbolTable.getScopes().put(scopeName, newScope);
             currentScope = newScope;
             return true;
         }
@@ -132,7 +135,7 @@ public class Parser {
         String rx = "^\\s*}\\s*$";
         Pattern p = Pattern.compile(rx);
         Matcher matcher = p.matcher(line);
-        if (matcher.find() && !(currentScope.getId().getId().equals(globalScopeID.getId()))) {
+        if (matcher.find() && !(currentScope.getId().equals(globalScopeID))) {
             System.out.println(currentScope);
             currentScope = symbolTable.getScopes().get(currentScope.getParent());
         }
