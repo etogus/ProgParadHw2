@@ -1,6 +1,7 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.regex.Matcher;
@@ -39,7 +40,6 @@ public class Parser {
             }
             exitScope(line);
         }
-        //System.out.println(symbolTable);
         System.out.println(currentScope);
     }
 
@@ -54,8 +54,6 @@ public class Parser {
             funType = matcher.group(1);
             funName = matcher.group(2);
             funParam = matcher.group(3);
-            //System.out.println(symbolTable);
-            //System.out.println(currentScope.getId());
             symbolTable.getScopes().get(currentScope.getId()).getVars().add(new Vars(funName, funType, lineIndex + 1));
             enterScope(line);
             if(funParam != null) {
@@ -113,16 +111,14 @@ public class Parser {
 
     public boolean enterScope(String line) {
         String scopeName;
-        //ScopeID newScopeID;
         String rx = "^\\s*(.*?)\\{\\s*$";
         Pattern p = Pattern.compile(rx);
         Matcher matcher = p.matcher(line);
         if (matcher.find()) {
             scopeName = matcher.group(1);
             if(scopeName.equals("")) {
-                scopeName = "BlockScope ";
+                scopeName = "scope_" + Utils.generateRandomString();
             }
-            //newScopeID = new ScopeID(scopeName);
             Scope newScope = new Scope(scopeName, currentScope.getId(), new ArrayList<>());
             symbolTable.getScopes().put(scopeName, newScope);
             currentScope = newScope;
