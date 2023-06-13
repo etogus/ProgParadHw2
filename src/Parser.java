@@ -1,7 +1,6 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.regex.Matcher;
@@ -47,7 +46,7 @@ public class Parser {
         String funType;
         String funName;
         String funParam;
-        String rx = "^(\\w+)\\s+(\\w+)\\((.*?)\\)\\s*\\{";
+        String rx = "^\\s*(int|float|char|bool|void)\\s*([a-zA-Z_][a-zA-Z0-9_]*)\\s*\\((.*)\\)\\s*\\{\\s*$";
         Pattern p = Pattern.compile(rx);
         Matcher matcher = p.matcher(line);
         if (matcher.find()){
